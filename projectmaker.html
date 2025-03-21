@@ -1,0 +1,706 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Project Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .login-container {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .hidden {
+      display: none;
+    }
+    .preview {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      background-color: #f1f1f1;
+      margin-right: 5px;
+    }
+    .tab.active {
+      background-color: #fff;
+      border-bottom: none;
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-top: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .output-container {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 20px;
+      overflow: auto;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="login-section" class="login-container">
+      <h2>Project Manager Login</h2>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter password">
+      </div>
+      <button id="login-btn">Login</button>
+    </div>
+
+    <div id="editor-section" class="hidden">
+      <h1>Project Manager</h1>
+      
+      <div class="tabs">
+        <div class="tab active" data-tab="new-project">New Project</div>
+        <div class="tab" data-tab="edit-project">Edit Existing Project</div>
+        <div class="tab" data-tab="help">Help</div>
+      </div>
+      
+      <div id="new-project" class="tab-content active">
+        <h2>Create New Project</h2>
+        <div class="form-group">
+          <label for="project-title">Project Title:</label>
+          <input type="text" id="project-title" placeholder="Enter project title">
+        </div>
+        
+        <div class="form-group">
+          <label for="project-image">Project Image Path:</label>
+          <input type="text" id="project-image" placeholder="images/project.jpg">
+        </div>
+        
+        <div class="form-group">
+          <label for="project-video">Project Video Path (optional):</label>
+          <input type="text" id="project-video" placeholder="images/project.mp4">
+        </div>
+        
+        <div class="form-group">
+          <label for="authors">Authors (comma separated):</label>
+          <input type="text" id="authors" placeholder="Author 1, Author 2, ...">
+        </div>
+        
+        <div class="form-group">
+          <label for="publication">Publication:</label>
+          <input type="text" id="publication" placeholder="CVPR, ICCV, etc.">
+        </div>
+        
+        <div class="form-group">
+          <label for="pub-year">Year:</label>
+          <input type="text" id="pub-year" placeholder="2024">
+        </div>
+        
+        <div class="form-group">
+          <label for="project-page">Project Page URL (optional):</label>
+          <input type="text" id="project-page" placeholder="https://example.com/project">
+        </div>
+        
+        <div class="form-group">
+          <label for="paper-url">Paper URL (optional):</label>
+          <input type="text" id="paper-url" placeholder="https://arxiv.org/abs/1234.56789">
+        </div>
+        
+        <div class="form-group">
+          <label for="project-description">Project Description:</label>
+          <textarea id="project-description" rows="5" placeholder="Enter project description"></textarea>
+        </div>
+        
+        <button id="generate-btn">Generate HTML</button>
+        <button id="preview-btn">Preview</button>
+        
+        <div id="output-container" class="output-container hidden">
+          <h3>Generated HTML (Copy this to your index.html):</h3>
+          <code id="output-code"></code>
+          <button id="copy-btn">Copy to Clipboard</button>
+        </div>
+        
+        <div id="preview-container" class="preview hidden">
+          <h3>Preview:</h3>
+          <div id="preview-content"></div>
+        </div>
+      </div>
+      
+      <div id="edit-project" class="tab-content">
+        <h2>Edit Existing Project</h2>
+        <p>This feature allows you to edit existing projects. You'll need to paste in the HTML of the project you want to edit:</p>
+        
+        <div class="form-group">
+          <label for="existing-html">Paste existing project HTML:</label>
+          <textarea id="existing-html" rows="10" placeholder="Paste the HTML of the project you want to edit"></textarea>
+          <button id="parse-existing">Parse HTML</button>
+        </div>
+        
+        <div id="edit-form-container" class="hidden">
+          <!-- Edit form will be added here after parsing -->
+        </div>
+      </div>
+      
+      <div id="help" class="tab-content">
+        <h2>Help</h2>
+        <h3>How to use this tool:</h3>
+        <ol>
+          <li><strong>Create a new project:</strong> Fill out the form with your project details and click "Generate HTML"</li>
+          <li><strong>Preview:</strong> Click "Preview" to see how your project will look</li>
+          <li><strong>Copy the HTML:</strong> Copy the generated HTML and paste it into your index.html file at the appropriate location</li>
+          <li><strong>Edit a project:</strong> Paste the HTML of an existing project into the Edit tab and modify as needed</li>
+        </ol>
+        <h3>Important Notes:</h3>
+        <ul>
+          <li>This tool doesn't automatically update your website files - you'll need to copy and paste the generated HTML</li>
+          <li>Make sure to keep backup copies of your index.html before making significant changes</li>
+          <li>Image paths should be relative to your website root (e.g., "images/myproject.jpg")</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Set your password here (in a real application, you would use a server-side authentication)
+    const CORRECT_PASSWORD = "your-password-here";
+    
+    // Check if user is already logged in
+    document.addEventListener('DOMContentLoaded', function() {
+      if (localStorage.getItem('authenticated') === 'true') {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('editor-section').classList.remove('hidden');
+      }
+      
+      // Tab functionality
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // Update active tab
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Show active content
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          document.getElementById(tabId).classList.add('active');
+        });
+      });
+    });
+    
+    // Login functionality
+    document.getElementById('login-btn').addEventListener('click', function() {
+      const password = document.getElementById('password').value;
+      
+      if (password === CORRECT_PASSWORD) {
+        localStorage.setItem('authenticated', 'true');
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('editor-section').classList.remove('hidden');
+      } else {
+        alert('Incorrect password. Please try again.');
+      }
+    });
+    
+    // Generate HTML for a new project
+    document.getElementById('generate-btn').addEventListener('click', function() {
+      const title = document.getElementById('project-title').value;
+      const imagePath = document.getElementById('project-image').value;
+      const videoPath = document.getElementById('project-video').value;
+      const authors = document.getElementById('authors').value.split(',').map(author => author.trim());
+      const publication = document.getElementById('publication').value;
+      const year = document.getElementById('pub-year').value;
+      const projectPage = document.getElementById('project-page').value;
+      const paperUrl = document.getElementById('paper-url').value;
+      const description = document.getElementById('project-description').value;
+      
+      // Generate a unique ID for the project based on the title
+      const projectId = title.toLowerCase().replace(/\s+/g, '_');
+      
+      // Generate HTML
+      let html = `
+    <tr onmouseout="${projectId}_stop()" onmouseover="${projectId}_start()">
+      <td style="padding:16px;width:20%;vertical-align:middle">
+        <div class="one">
+          <div class="two" id='${projectId}_image'>`;
+      
+      if (videoPath) {
+        html += `<video width=100% muted autoplay loop>
+          <source src="${videoPath}" type="video/mp4">
+          Your browser does not support the video tag.
+          </video>`;
+      }
+      
+      html += `</div>
+          <img src='${imagePath}' width=100%>
+        </div>
+        <script type="text/javascript">
+          function ${projectId}_start() {
+            document.getElementById('${projectId}_image').style.opacity = "1";
+          }
+
+          function ${projectId}_stop() {
+            document.getElementById('${projectId}_image').style.opacity = "0";
+          }
+          ${projectId}_stop()
+        </script>
+      </td>
+      <td style="padding:8px;width:80%;vertical-align:middle">`;
+      
+      if (projectPage) {
+        html += `
+        <a href="${projectPage}">
+          <span class="papertitle">${title}</span>
+        </a>`;
+      } else {
+        html += `
+        <span class="papertitle">${title}</span>`;
+      }
+      
+      html += `
+        <br>`;
+      
+      // Add authors
+      for (let i = 0; i < authors.length; i++) {
+        const author = authors[i].trim();
+        
+        if (author.toLowerCase().includes("jonathan") || author.toLowerCase().includes("barron")) {
+          html += `
+        <strong>${author}</strong>`;
+        } else {
+          html += `
+        <a href="#">${author}</a>`;
+        }
+        
+        if (i < authors.length - 1) {
+          html += `,`;
+        }
+      }
+      
+      html += `
+        <br>
+        <em>${publication}</em>, ${year}
+        <br>`;
+      
+      // Add links
+      if (projectPage) {
+        html += `
+        <a href="${projectPage}">project page</a>`;
+        
+        if (paperUrl) {
+          html += `
+        /`;
+        }
+      }
+      
+      if (paperUrl) {
+        html += `
+        <a href="${paperUrl}">arXiv</a>`;
+      }
+      
+      html += `
+        <p></p>
+        <p>
+        ${description}
+        </p>
+      </td>
+    </tr>`;
+      
+      // Display output
+      document.getElementById('output-code').textContent = html;
+      document.getElementById('output-container').classList.remove('hidden');
+      document.getElementById('preview-container').classList.add('hidden');
+    });
+    
+    // Preview functionality
+    document.getElementById('preview-btn').addEventListener('click', function() {
+      const title = document.getElementById('project-title').value;
+      const imagePath = document.getElementById('project-image').value;
+      const description = document.getElementById('project-description').value;
+      
+      let previewHtml = `
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+          <tbody>
+            <tr>
+              <td style="width:20%;vertical-align:middle">
+                <img src="${imagePath}" width="100%">
+              </td>
+              <td style="width:80%;vertical-align:middle">
+                <span class="papertitle">${title}</span>
+                <p>${description}</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+      
+      document.getElementById('preview-content').innerHTML = previewHtml;
+      document.getElementById('preview-container').classList.remove('hidden');
+      document.getElementById('output-container').classList.add('hidden');
+    });
+    
+    // Copy to clipboard functionality
+    document.getElementById('copy-btn').addEventListener('click', function() {
+      const code = document.getElementById('output-code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        alert('HTML copied to clipboard!');
+      });
+    });
+    
+    // Parse existing HTML functionality
+    document.getElementById('parse-existing').addEventListener('click', function() {
+      const existingHtml = document.getElementById('existing-html').value;
+      
+      try {
+        // Create a temporary element to parse the HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = existingHtml;
+        
+        // Extract project details
+        const projectTitle = tempDiv.querySelector('.papertitle').textContent;
+        const imagePath = tempDiv.querySelector('img').getAttribute('src');
+        
+        // Get video path if it exists
+        let videoPath = '';
+        const videoElement = tempDiv.querySelector('video source');
+        if (videoElement) {
+          videoPath = videoElement.getAttribute('src');
+        }
+        
+        // Get authors
+        const tdElement = tempDiv.querySelector('td[style*="80%"]');
+        let authors = [];
+        let currentNode = tdElement.querySelector('.papertitle').parentNode.nextSibling;
+        
+        // Skip to the first <br>
+        while (currentNode && !(currentNode.nodeName === 'BR')) {
+          currentNode = currentNode.nextSibling;
+        }
+        
+        // Get the text between the first <br> and second <br>
+        if (currentNode) {
+          currentNode = currentNode.nextSibling; // Move past the <br>
+          let authorText = '';
+          
+          while (currentNode && !(currentNode.nodeName === 'BR')) {
+            if (currentNode.nodeType === Node.TEXT_NODE) {
+              authorText += currentNode.textContent;
+            } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
+              if (currentNode.nodeName === 'A' || currentNode.nodeName === 'STRONG') {
+                authorText += currentNode.textContent;
+              }
+            }
+            currentNode = currentNode.nextSibling;
+          }
+          
+          authors = authorText.split(',').map(a => a.trim());
+        }
+        
+        // Get publication and year
+        let publication = '';
+        let year = '';
+        if (currentNode) {
+          currentNode = currentNode.nextSibling; // Move past the second <br>
+          let pubText = '';
+          
+          while (currentNode && !(currentNode.nodeName === 'BR')) {
+            if (currentNode.nodeType === Node.TEXT_NODE) {
+              pubText += currentNode.textContent;
+            } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === 'EM') {
+              publication = currentNode.textContent;
+            }
+            currentNode = currentNode.nextSibling;
+          }
+          
+          const pubMatch = pubText.match(/,\s*(\d{4})/);
+          if (pubMatch) {
+            year = pubMatch[1];
+          }
+        }
+        
+        // Get project page and paper URL
+        let projectPage = '';
+        let paperUrl = '';
+        
+        const links = tdElement.querySelectorAll('a');
+        links.forEach(link => {
+          const text = link.textContent.trim().toLowerCase();
+          const href = link.getAttribute('href');
+          
+          if (text === 'project page') {
+            projectPage = href;
+          } else if (text === 'arxiv') {
+            paperUrl = href;
+          }
+        });
+        
+        // Get description
+        let description = '';
+        const pElements = tdElement.querySelectorAll('p');
+        if (pElements.length > 1) {
+          description = pElements[pElements.length - 1].textContent.trim();
+        }
+        
+        // Create the edit form
+        const editFormHtml = `
+          <div class="form-group">
+            <label for="edit-project-title">Project Title:</label>
+            <input type="text" id="edit-project-title" value="${projectTitle}">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-project-image">Project Image Path:</label>
+            <input type="text" id="edit-project-image" value="${imagePath}">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-project-video">Project Video Path:</label>
+            <input type="text" id="edit-project-video" value="${videoPath}">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-authors">Authors (comma separated):</label>
+            <input type="text" id="edit-authors" value="${authors.join(', ')}">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-publication">Publication:</label>
+            <input type="text" id="edit-publication" value="${publication}">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-pub-year">Year:</label>
+            <input type="text" id="edit-pub-year" value="${year}">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-project-page">Project Page URL:</label>
+            <input type="text" id="edit-project-page" value="${projectPage}">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-paper-url">Paper URL:</label>
+            <input type="text" id="edit-paper-url" value="${paperUrl}">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-project-description">Project Description:</label>
+            <textarea id="edit-project-description" rows="5">${description}</textarea>
+          </div>
+          
+          <button id="update-btn">Update HTML</button>
+          <button id="edit-preview-btn">Preview</button>
+          
+          <div id="edit-output-container" class="output-container hidden">
+            <h3>Updated HTML (Copy this to your index.html):</h3>
+            <code id="edit-output-code"></code>
+            <button id="edit-copy-btn">Copy to Clipboard</button>
+          </div>
+          
+          <div id="edit-preview-container" class="preview hidden">
+            <h3>Preview:</h3>
+            <div id="edit-preview-content"></div>
+          </div>
+        `;
+        
+        document.getElementById('edit-form-container').innerHTML = editFormHtml;
+        document.getElementById('edit-form-container').classList.remove('hidden');
+        
+        // Add event listeners for the edit form
+        document.getElementById('update-btn').addEventListener('click', function() {
+          const title = document.getElementById('edit-project-title').value;
+          const imagePath = document.getElementById('edit-project-image').value;
+          const videoPath = document.getElementById('edit-project-video').value;
+          const authors = document.getElementById('edit-authors').value.split(',').map(author => author.trim());
+          const publication = document.getElementById('edit-publication').value;
+          const year = document.getElementById('edit-pub-year').value;
+          const projectPage = document.getElementById('edit-project-page').value;
+          const paperUrl = document.getElementById('edit-paper-url').value;
+          const description = document.getElementById('edit-project-description').value;
+          
+          // Generate a unique ID for the project based on the title
+          const projectId = title.toLowerCase().replace(/\s+/g, '_');
+          
+          // Generate HTML (same as the new project HTML generation)
+          let html = `
+    <tr onmouseout="${projectId}_stop()" onmouseover="${projectId}_start()">
+      <td style="padding:16px;width:20%;vertical-align:middle">
+        <div class="one">
+          <div class="two" id='${projectId}_image'>`;
+          
+          if (videoPath) {
+            html += `<video width=100% muted autoplay loop>
+          <source src="${videoPath}" type="video/mp4">
+          Your browser does not support the video tag.
+          </video>`;
+          }
+          
+          html += `</div>
+          <img src='${imagePath}' width=100%>
+        </div>
+        <script type="text/javascript">
+          function ${projectId}_start() {
+            document.getElementById('${projectId}_image').style.opacity = "1";
+          }
+
+          function ${projectId}_stop() {
+            document.getElementById('${projectId}_image').style.opacity = "0";
+          }
+          ${projectId}_stop()
+        </script>
+      </td>
+      <td style="padding:8px;width:80%;vertical-align:middle">`;
+          
+          if (projectPage) {
+            html += `
+        <a href="${projectPage}">
+          <span class="papertitle">${title}</span>
+        </a>`;
+          } else {
+            html += `
+        <span class="papertitle">${title}</span>`;
+          }
+          
+          html += `
+        <br>`;
+          
+          // Add authors
+          for (let i = 0; i < authors.length; i++) {
+            const author = authors[i].trim();
+            
+            if (author.toLowerCase().includes("jonathan") || author.toLowerCase().includes("barron")) {
+              html += `
+        <strong>${author}</strong>`;
+            } else {
+              html += `
+        <a href="#">${author}</a>`;
+            }
+            
+            if (i < authors.length - 1) {
+              html += `,`;
+            }
+          }
+          
+          html += `
+        <br>
+        <em>${publication}</em>, ${year}
+        <br>`;
+          
+          // Add links
+          if (projectPage) {
+            html += `
+        <a href="${projectPage}">project page</a>`;
+            
+            if (paperUrl) {
+              html += `
+        /`;
+            }
+          }
+          
+          if (paperUrl) {
+            html += `
+        <a href="${paperUrl}">arXiv</a>`;
+          }
+          
+          html += `
+        <p></p>
+        <p>
+        ${description}
+        </p>
+      </td>
+    </tr>`;
+          
+          // Display output
+          document.getElementById('edit-output-code').textContent = html;
+          document.getElementById('edit-output-container').classList.remove('hidden');
+          document.getElementById('edit-preview-container').classList.add('hidden');
+        });
+        
+        document.getElementById('edit-preview-btn').addEventListener('click', function() {
+          const title = document.getElementById('edit-project-title').value;
+          const imagePath = document.getElementById('edit-project-image').value;
+          const description = document.getElementById('edit-project-description').value;
+          
+          let previewHtml = `
+            <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+              <tbody>
+                <tr>
+                  <td style="width:20%;vertical-align:middle">
+                    <img src="${imagePath}" width="100%">
+                  </td>
+                  <td style="width:80%;vertical-align:middle">
+                    <span class="papertitle">${title}</span>
+                    <p>${description}</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          `;
+          
+          document.getElementById('edit-preview-content').innerHTML = previewHtml;
+          document.getElementById('edit-preview-container').classList.remove('hidden');
+          document.getElementById('edit-output-container').classList.add('hidden');
+        });
+        
+        document.getElementById('edit-copy-btn').addEventListener('click', function() {
+          const code = document.getElementById('edit-output-code').textContent;
+          navigator.clipboard.writeText(code).then(() => {
+            alert('HTML copied to clipboard!');
+          });
+        });
+      } catch (error) {
+        alert('Error parsing HTML. Please check your input and try again.');
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
