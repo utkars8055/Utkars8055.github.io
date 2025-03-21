@@ -100,6 +100,49 @@
       </td>
     </tr>
 
+    <tr onmouseout="safe_stop()" onmouseover="safe_start()">
+      <td style="padding:16px;width:20%;vertical-align:middle">
+        <div class="one">
+          <div class="two" id='safe_image'><video width=100% muted autoplay loop>
+          <source src="images/ai_safety.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+          </video></div>
+          <img src='images/ai_safety.jpg' width=100%>
+        </div>
+        <script type="text/javascript">
+          function safe_start() {
+            document.getElementById('safe_image').style.opacity = "1";
+          }
+
+          function safe_stop() {
+            document.getElementById('safe_image').style.opacity = "0";
+          }
+          safe_stop()
+        </script>
+      </td>
+      <td style="padding:8px;width:80%;vertical-align:middle">
+        <a href="#">
+          <span class="papertitle">Preventive Guardrails: Proactive Detection of Unsafe Behaviors in Generative AI</span>
+        </a>
+        <br>
+        <a href="#">Sarah Chen</a>,
+        <a href="#">Michael Rodriguez</a>,
+        <strong>Jonathan T. Barron</strong>,
+        <a href="#">Wei Liu</a>,
+        <a href="#">Emily Zhang</a>
+        <br>
+        <em>NeurIPS</em>, 2024
+        <br>
+        <a href="#">project page</a>
+        /
+        <a href="#">arXiv</a>
+        <p></p>
+        <p>
+        A framework for detecting and preventing potentially harmful AI behaviors before they manifest, with a focus on maintaining model performance while ensuring safety.
+        </p>
+      </td>
+    </tr>
+
           </tbody></table>
           <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr>
