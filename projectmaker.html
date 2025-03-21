@@ -5,183 +5,410 @@
   <title>Project Manager</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --bg-color: #f9f9f9;
+      --text-color: #333;
+      --border-color: #ddd;
+      --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 0;
+    }
+    
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 20px;
     }
+    
+    h1, h2, h3 {
+      font-weight: 500;
+      margin-top: 0;
+      color: #2c3e50;
+    }
+    
     .login-container {
       max-width: 400px;
       margin: 100px auto;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+      padding: 30px;
+      border-radius: 8px;
+      background-color: white;
+      box-shadow: var(--shadow);
       text-align: center;
+      transition: all 0.3s ease;
     }
+    
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      text-align: left;
     }
+    
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      font-weight: 500;
     }
+    
     input, textarea, select {
       width: 100%;
-      padding: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
       box-sizing: border-box;
-      margin-bottom: 10px;
+      font-size: 14px;
+      transition: border 0.3s ease;
     }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+    
+    .error {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 5px;
+      display: none;
+    }
+    
     button {
-      background-color: #4CAF50;
+      background-color: var(--primary-color);
       color: white;
-      padding: 10px 15px;
+      padding: 12px 20px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
     }
+    
     button:hover {
-      background-color: #45a049;
+      background-color: var(--primary-dark);
     }
+    
+    button.secondary {
+      background-color: var(--secondary-color);
+    }
+    
+    button.secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+    
     .hidden {
       display: none;
     }
+    
     .preview {
-      margin-top: 20px;
-      border: 1px solid #ddd;
-      padding: 15px;
-      border-radius: 5px;
+      margin-top: 25px;
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 8px;
+      background-color: white;
     }
+    
     .tabs {
       display: flex;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border-color);
     }
+    
     .tab {
-      padding: 10px 20px;
+      padding: 12px 20px;
       cursor: pointer;
-      border: 1px solid #ddd;
-      background-color: #f1f1f1;
-      margin-right: 5px;
+      background-color: transparent;
+      border: none;
+      font-weight: 500;
+      color: #7f8c8d;
+      position: relative;
+      transition: color 0.3s ease;
     }
+    
+    .tab:after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary-color);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
     .tab.active {
-      background-color: #fff;
-      border-bottom: none;
+      color: var(--primary-color);
     }
+    
+    .tab.active:after {
+      transform: scaleX(1);
+    }
+    
     .tab-content {
       display: none;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-top: none;
+      padding: 25px;
+      border-radius: 8px;
+      background-color: white;
+      box-shadow: var(--shadow);
     }
+    
     .tab-content.active {
       display: block;
     }
+    
     .output-container {
       background-color: #f5f5f5;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-top: 25px;
       overflow: auto;
+      position: relative;
     }
+    
     code {
       white-space: pre-wrap;
-      font-family: monospace;
+      font-family: Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 14px;
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      display: block;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #f5f5f5;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 13px;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: 4px;
+      background-color: #2ecc71;
+      color: white;
+      z-index: 1000;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .toast.error {
+      background-color: #e74c3c;
+      display: block;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .login-container {
+        margin: 50px auto;
+        padding: 20px;
+      }
+      
+      .tabs {
+        flex-wrap: wrap;
+      }
+      
+      .tab {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 10px;
+      }
+      
+      .tab-content {
+        padding: 15px;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="container">
+    <!-- Toast notification container -->
+    <div id="toast" class="toast"></div>
+    
     <div id="login-section" class="login-container">
-      <h2>Project Manager Login</h2>
+      <h2>Project Manager</h2>
+      <p>Please enter your password to access the project management interface.</p>
       <div class="form-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" placeholder="Enter password">
+        <input type="password" id="password" placeholder="Enter password" required>
+        <div id="password-error" class="error">Invalid password. Please try again.</div>
       </div>
-      <button id="login-btn">Login</button>
+      <button id="login-btn">
+        <span id="login-spinner" class="spinner hidden"></span>
+        <span id="login-text">Login</span>
+      </button>
     </div>
 
     <div id="editor-section" class="hidden">
       <h1>Project Manager</h1>
       
       <div class="tabs">
-        <div class="tab active" data-tab="new-project">New Project</div>
-        <div class="tab" data-tab="edit-project">Edit Existing Project</div>
-        <div class="tab" data-tab="help">Help</div>
+        <button class="tab active" data-tab="new-project">
+          <i class="fas fa-plus-circle"></i> New Project
+        </button>
+        <button class="tab" data-tab="edit-project">
+          <i class="fas fa-edit"></i> Edit Existing Project
+        </button>
+        <button class="tab" data-tab="help">
+          <i class="fas fa-question-circle"></i> Help
+        </button>
       </div>
       
       <div id="new-project" class="tab-content active">
         <h2>Create New Project</h2>
-        <div class="form-group">
-          <label for="project-title">Project Title:</label>
-          <input type="text" id="project-title" placeholder="Enter project title">
-        </div>
-        
-        <div class="form-group">
-          <label for="project-image">Project Image Path:</label>
-          <input type="text" id="project-image" placeholder="images/project.jpg">
-        </div>
-        
-        <div class="form-group">
-          <label for="project-video">Project Video Path (optional):</label>
-          <input type="text" id="project-video" placeholder="images/project.mp4">
-        </div>
-        
-        <div class="form-group">
-          <label for="authors">Authors (comma separated):</label>
-          <input type="text" id="authors" placeholder="Author 1, Author 2, ...">
-        </div>
-        
-        <div class="form-group">
-          <label for="publication">Publication:</label>
-          <input type="text" id="publication" placeholder="CVPR, ICCV, etc.">
-        </div>
-        
-        <div class="form-group">
-          <label for="pub-year">Year:</label>
-          <input type="text" id="pub-year" placeholder="2024">
-        </div>
-        
-        <div class="form-group">
-          <label for="project-page">Project Page URL (optional):</label>
-          <input type="text" id="project-page" placeholder="https://example.com/project">
-        </div>
-        
-        <div class="form-group">
-          <label for="paper-url">Paper URL (optional):</label>
-          <input type="text" id="paper-url" placeholder="https://arxiv.org/abs/1234.56789">
-        </div>
-        
-        <div class="form-group">
-          <label for="project-description">Project Description:</label>
-          <textarea id="project-description" rows="5" placeholder="Enter project description"></textarea>
-        </div>
-        
-        <button id="generate-btn">Generate HTML</button>
-        <button id="preview-btn">Preview</button>
+        <form id="new-project-form">
+          <div class="form-group">
+            <label for="project-title">Project Title:<span style="color: #e74c3c">*</span></label>
+            <input type="text" id="project-title" placeholder="Enter project title" required>
+            <div id="title-error" class="error">Project title is required</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="project-image">Project Image Path:<span style="color: #e74c3c">*</span></label>
+            <input type="text" id="project-image" placeholder="images/project.jpg" required>
+            <div id="image-error" class="error">Image path is required</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="project-video">Project Video Path (optional):</label>
+            <input type="text" id="project-video" placeholder="images/project.mp4">
+          </div>
+          
+          <div class="form-group">
+            <label for="authors">Authors (comma separated):<span style="color: #e74c3c">*</span></label>
+            <input type="text" id="authors" placeholder="Author 1, Author 2, ..." required>
+            <div id="authors-error" class="error">At least one author is required</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="publication">Publication:<span style="color: #e74c3c">*</span></label>
+            <input type="text" id="publication" placeholder="CVPR, ICCV, etc." required>
+            <div id="publication-error" class="error">Publication is required</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="pub-year">Year:<span style="color: #e74c3c">*</span></label>
+            <input type="text" id="pub-year" placeholder="2024" required pattern="[0-9]{4}">
+            <div id="year-error" class="error">Valid year is required (format: YYYY)</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="project-page">Project Page URL (optional):</label>
+            <input type="url" id="project-page" placeholder="https://example.com/project">
+            <div id="project-page-error" class="error">Please enter a valid URL</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="paper-url">Paper URL (optional):</label>
+            <input type="url" id="paper-url" placeholder="https://arxiv.org/abs/1234.56789">
+            <div id="paper-url-error" class="error">Please enter a valid URL</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="project-description">Project Description:<span style="color: #e74c3c">*</span></label>
+            <textarea id="project-description" rows="5" placeholder="Enter project description" required></textarea>
+            <div id="description-error" class="error">Description is required</div>
+          </div>
+          
+          <div class="button-group">
+            <button type="button" id="generate-btn">
+              <span id="generate-spinner" class="spinner hidden"></span>
+              <span id="generate-text">Generate HTML</span>
+            </button>
+            <button type="button" id="preview-btn" class="secondary">
+              <i class="fas fa-eye"></i> Preview
+            </button>
+          </div>
+        </form>
         
         <div id="output-container" class="output-container hidden">
-          <h3>Generated HTML (Copy this to your index.html):</h3>
+          <h3>Generated HTML</h3>
+          <p>Copy this code to your index.html file in the projects section.</p>
+          <button id="copy-btn" class="copy-btn">
+            <i class="fas fa-copy"></i> Copy
+          </button>
           <code id="output-code"></code>
-          <button id="copy-btn">Copy to Clipboard</button>
         </div>
         
         <div id="preview-container" class="preview hidden">
-          <h3>Preview:</h3>
+          <h3>Preview</h3>
           <div id="preview-content"></div>
         </div>
       </div>
       
       <div id="edit-project" class="tab-content">
         <h2>Edit Existing Project</h2>
-        <p>This feature allows you to edit existing projects. You'll need to paste in the HTML of the project you want to edit:</p>
+        <p>This feature allows you to edit existing projects. Paste in the HTML of the project you want to edit:</p>
         
         <div class="form-group">
           <label for="existing-html">Paste existing project HTML:</label>
-          <textarea id="existing-html" rows="10" placeholder="Paste the HTML of the project you want to edit"></textarea>
-          <button id="parse-existing">Parse HTML</button>
+          <textarea id="existing-html" rows="10" placeholder="Paste the HTML of the project you want to edit" required></textarea>
+          <div id="existing-html-error" class="error">Please paste valid HTML</div>
         </div>
+        
+        <button id="parse-existing">
+          <span id="parse-spinner" class="spinner hidden"></span>
+          <span id="parse-text">Parse HTML</span>
+        </button>
         
         <div id="edit-form-container" class="hidden">
           <!-- Edit form will be added here after parsing -->
@@ -194,14 +421,23 @@
         <ol>
           <li><strong>Create a new project:</strong> Fill out the form with your project details and click "Generate HTML"</li>
           <li><strong>Preview:</strong> Click "Preview" to see how your project will look</li>
-          <li><strong>Copy the HTML:</strong> Copy the generated HTML and paste it into your index.html file at the appropriate location</li>
+          <li><strong>Copy the HTML:</strong> Copy the generated HTML and paste it into your index.html file at the appropriate location (inside the project list section)</li>
           <li><strong>Edit a project:</strong> Paste the HTML of an existing project into the Edit tab and modify as needed</li>
         </ol>
         <h3>Important Notes:</h3>
         <ul>
+          <li>Fields marked with <span style="color: #e74c3c">*</span> are required</li>
           <li>This tool doesn't automatically update your website files - you'll need to copy and paste the generated HTML</li>
           <li>Make sure to keep backup copies of your index.html before making significant changes</li>
           <li>Image paths should be relative to your website root (e.g., "images/myproject.jpg")</li>
+          <li>For best results, maintain the same format for all projects</li>
+        </ul>
+        <h3>Tips for project images:</h3>
+        <ul>
+          <li>Use consistent image dimensions for all projects</li>
+          <li>Recommended size: square images of at least 400x400 pixels</li>
+          <li>If using video hover effects, ensure videos have the same dimensions as images</li>
+          <li>Compress your images for faster loading times</li>
         </ul>
       </div>
     </div>
@@ -211,12 +447,46 @@
     // Set your password here (in a real application, you would use a server-side authentication)
     const CORRECT_PASSWORD = "8055";
     
+    // DOM Elements
+    const loginSection = document.getElementById('login-section');
+    const editorSection = document.getElementById('editor-section');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('login-btn');
+    const passwordError = document.getElementById('password-error');
+    const loginSpinner = document.getElementById('login-spinner');
+    const loginText = document.getElementById('login-text');
+    const toast = document.getElementById('toast');
+    
+    // Form elements
+    const newProjectForm = document.getElementById('new-project-form');
+    const projectTitle = document.getElementById('project-title');
+    const projectImage = document.getElementById('project-image');
+    const projectVideo = document.getElementById('project-video');
+    const authors = document.getElementById('authors');
+    const publication = document.getElementById('publication');
+    const pubYear = document.getElementById('pub-year');
+    const projectPage = document.getElementById('project-page');
+    const paperUrl = document.getElementById('paper-url');
+    const projectDescription = document.getElementById('project-description');
+    const generateBtn = document.getElementById('generate-btn');
+    const previewBtn = document.getElementById('preview-btn');
+    const outputContainer = document.getElementById('output-container');
+    const outputCode = document.getElementById('output-code');
+    const copyBtn = document.getElementById('copy-btn');
+    const previewContainer = document.getElementById('preview-container');
+    const previewContent = document.getElementById('preview-content');
+    const generateSpinner = document.getElementById('generate-spinner');
+    const generateText = document.getElementById('generate-text');
+    
     // Check if user is already logged in
     document.addEventListener('DOMContentLoaded', function() {
       if (localStorage.getItem('authenticated') === 'true') {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('editor-section').classList.remove('hidden');
+        loginSection.classList.add('hidden');
+        editorSection.classList.remove('hidden');
       }
+      
+      // Set up form validation
+      setupFormValidation();
       
       // Tab functionality
       const tabs = document.querySelectorAll('.tab');
@@ -237,49 +507,171 @@
       });
     });
     
-    // Login functionality
-    document.getElementById('login-btn').addEventListener('click', function() {
-      const password = document.getElementById('password').value;
+    // Setup form validation
+    function setupFormValidation() {
+      const requiredFields = [
+        { field: projectTitle, error: document.getElementById('title-error') },
+        { field: projectImage, error: document.getElementById('image-error') },
+        { field: authors, error: document.getElementById('authors-error') },
+        { field: publication, error: document.getElementById('publication-error') },
+        { field: pubYear, error: document.getElementById('year-error') },
+        { field: projectDescription, error: document.getElementById('description-error') }
+      ];
       
-      if (password === CORRECT_PASSWORD) {
-        localStorage.setItem('authenticated', 'true');
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('editor-section').classList.remove('hidden');
-      } else {
-        alert('Incorrect password. Please try again.');
+      requiredFields.forEach(({ field, error }) => {
+        field.addEventListener('input', function() {
+          if (field.validity.valid) {
+            error.style.display = 'none';
+          } else {
+            error.style.display = 'block';
+          }
+        });
+      });
+      
+      // URL validation
+      [projectPage, paperUrl].forEach(field => {
+        field.addEventListener('input', function() {
+          const error = document.getElementById(`${field.id}-error`);
+          if (field.value === '' || field.validity.valid) {
+            error.style.display = 'none';
+          } else {
+            error.style.display = 'block';
+          }
+        });
+      });
+    }
+    
+    // Helper function to show toast messages
+    function showToast(message, isError = false) {
+      toast.textContent = message;
+      toast.className = isError ? 'toast error show' : 'toast show';
+      setTimeout(() => {
+        toast.className = 'toast';
+      }, 3000);
+    }
+    
+    // Validate form before submission
+    function validateForm() {
+      let isValid = true;
+      
+      // Check required fields
+      const requiredFields = [
+        { field: projectTitle, error: document.getElementById('title-error') },
+        { field: projectImage, error: document.getElementById('image-error') },
+        { field: authors, error: document.getElementById('authors-error') },
+        { field: publication, error: document.getElementById('publication-error') },
+        { field: pubYear, error: document.getElementById('year-error') },
+        { field: projectDescription, error: document.getElementById('description-error') }
+      ];
+      
+      requiredFields.forEach(({ field, error }) => {
+        if (!field.value.trim()) {
+          error.style.display = 'block';
+          isValid = false;
+        } else {
+          error.style.display = 'none';
+        }
+      });
+      
+      // Validate year format
+      if (pubYear.value && !/^\d{4}$/.test(pubYear.value)) {
+        document.getElementById('year-error').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate URLs (only if not empty)
+      [projectPage, paperUrl].forEach(field => {
+        const error = document.getElementById(`${field.id}-error`);
+        if (field.value && !field.validity.valid) {
+          error.style.display = 'block';
+          isValid = false;
+        } else {
+          error.style.display = 'none';
+        }
+      });
+      
+      return isValid;
+    }
+    
+    // Login functionality
+    loginBtn.addEventListener('click', function() {
+      const password = passwordInput.value;
+      
+      // Show loading state
+      loginSpinner.classList.remove('hidden');
+      loginText.textContent = 'Verifying...';
+      loginBtn.disabled = true;
+      
+      // Simulate a server request
+      setTimeout(() => {
+        if (password === CORRECT_PASSWORD) {
+          localStorage.setItem('authenticated', 'true');
+          loginSection.classList.add('hidden');
+          editorSection.classList.remove('hidden');
+          showToast('Login successful');
+        } else {
+          passwordError.style.display = 'block';
+          passwordInput.focus();
+          showToast('Invalid password', true);
+        }
+        
+        // Reset button state
+        loginSpinner.classList.add('hidden');
+        loginText.textContent = 'Login';
+        loginBtn.disabled = false;
+      }, 1000);
+    });
+    
+    // Login on Enter key
+    passwordInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        loginBtn.click();
       }
     });
     
     // Generate HTML for a new project
-    document.getElementById('generate-btn').addEventListener('click', function() {
-      const title = document.getElementById('project-title').value;
-      const imagePath = document.getElementById('project-image').value;
-      const videoPath = document.getElementById('project-video').value;
-      const authors = document.getElementById('authors').value.split(',').map(author => author.trim());
-      const publication = document.getElementById('publication').value;
-      const year = document.getElementById('pub-year').value;
-      const projectPage = document.getElementById('project-page').value;
-      const paperUrl = document.getElementById('paper-url').value;
-      const description = document.getElementById('project-description').value;
+    generateBtn.addEventListener('click', function() {
+      if (!validateForm()) {
+        showToast('Please fix the errors in the form', true);
+        return;
+      }
       
-      // Generate a unique ID for the project based on the title
-      const projectId = title.toLowerCase().replace(/\s+/g, '_');
+      // Show loading state
+      generateSpinner.classList.remove('hidden');
+      generateText.textContent = 'Generating...';
+      generateBtn.disabled = true;
       
-      // Generate HTML
-      let html = `
+      // Simulate processing delay
+      setTimeout(() => {
+        const title = projectTitle.value.trim();
+        const imagePath = projectImage.value.trim();
+        const videoPath = projectVideo.value.trim();
+        const authorsList = authors.value.split(',').map(author => author.trim());
+        const publicationValue = publication.value.trim();
+        const year = pubYear.value.trim();
+        const projectPageUrl = projectPage.value.trim();
+        const paperUrlValue = paperUrl.value.trim();
+        const description = projectDescription.value.trim();
+        
+        // Generate a unique ID for the project based on the title
+        const projectId = title.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+        
+        // Generate HTML
+        let html = `
     <tr onmouseout="${projectId}_stop()" onmouseover="${projectId}_start()">
       <td style="padding:16px;width:20%;vertical-align:middle">
         <div class="one">
           <div class="two" id='${projectId}_image'>`;
-      
-      if (videoPath) {
-        html += `<video width=100% muted autoplay loop>
+        
+        if (videoPath) {
+          html += `<video width=100% muted autoplay loop>
           <source src="${videoPath}" type="video/mp4">
           Your browser does not support the video tag.
           </video>`;
-      }
-      
-      html += `</div>
+        }
+        
+        html += `</div>
           <img src='${imagePath}' width=100%>
         </div>
         <script type="text/javascript">
@@ -294,87 +686,118 @@
         </script>
       </td>
       <td style="padding:8px;width:80%;vertical-align:middle">`;
-      
-      if (projectPage) {
-        html += `
-        <a href="${projectPage}">
+        
+        if (projectPageUrl) {
+          html += `
+        <a href="${projectPageUrl}">
           <span class="papertitle">${title}</span>
         </a>`;
-      } else {
-        html += `
-        <span class="papertitle">${title}</span>`;
-      }
-      
-      html += `
-        <br>`;
-      
-      // Add authors
-      for (let i = 0; i < authors.length; i++) {
-        const author = authors[i].trim();
-        
-        if (author.toLowerCase().includes("jonathan") || author.toLowerCase().includes("barron")) {
-          html += `
-        <strong>${author}</strong>`;
         } else {
           html += `
-        <a href="#">${author}</a>`;
+        <span class="papertitle">${title}</span>`;
         }
         
-        if (i < authors.length - 1) {
-          html += `,`;
-        }
-      }
-      
-      html += `
-        <br>
-        <em>${publication}</em>, ${year}
+        html += `
         <br>`;
-      
-      // Add links
-      if (projectPage) {
-        html += `
-        <a href="${projectPage}">project page</a>`;
         
-        if (paperUrl) {
-          html += `
-        /`;
+        // Add authors
+        for (let i = 0; i < authorsList.length; i++) {
+          const author = authorsList[i].trim();
+          
+          if (author.toLowerCase().includes("jonathan") || author.toLowerCase().includes("barron")) {
+            html += `
+        <strong>${author}</strong>`;
+          } else {
+            html += `
+        <a href="#">${author}</a>`;
+          }
+          
+          if (i < authorsList.length - 1) {
+            html += `,`;
+          }
         }
-      }
-      
-      if (paperUrl) {
+        
         html += `
-        <a href="${paperUrl}">arXiv</a>`;
-      }
-      
-      html += `
+        <br>
+        <em>${publicationValue}</em>, ${year}
+        <br>`;
+        
+        // Add links
+        if (projectPageUrl) {
+          html += `
+        <a href="${projectPageUrl}">project page</a>`;
+          
+          if (paperUrlValue) {
+            html += `
+        /`;
+          }
+        }
+        
+        if (paperUrlValue) {
+          html += `
+        <a href="${paperUrlValue}">arXiv</a>`;
+        }
+        
+        html += `
         <p></p>
         <p>
         ${description}
         </p>
       </td>
     </tr>`;
-      
-      // Display output
-      document.getElementById('output-code').textContent = html;
-      document.getElementById('output-container').classList.remove('hidden');
-      document.getElementById('preview-container').classList.add('hidden');
+        
+        // Display output
+        outputCode.textContent = html;
+        outputContainer.classList.remove('hidden');
+        previewContainer.classList.add('hidden');
+        
+        // Reset button state
+        generateSpinner.classList.add('hidden');
+        generateText.textContent = 'Generate HTML';
+        generateBtn.disabled = false;
+        
+        // Scroll to the output
+        outputContainer.scrollIntoView({ behavior: 'smooth' });
+        
+        showToast('HTML generated successfully');
+      }, 800);
     });
     
     // Preview functionality
-    document.getElementById('preview-btn').addEventListener('click', function() {
-      const title = document.getElementById('project-title').value;
-      const imagePath = document.getElementById('project-image').value;
-      const description = document.getElementById('project-description').value;
+    previewBtn.addEventListener('click', function() {
+      if (!validateForm()) {
+        showToast('Please fix the errors in the form', true);
+        return;
+      }
+      
+      const title = projectTitle.value.trim();
+      const imagePath = projectImage.value.trim();
+      const videoPath = projectVideo.value.trim();
+      const description = projectDescription.value.trim();
       
       let previewHtml = `
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
           <tbody>
             <tr>
-              <td style="width:20%;vertical-align:middle">
-                <img src="${imagePath}" width="100%">
+              <td style="width:20%;vertical-align:middle">`;
+              
+      if (videoPath) {
+        previewHtml += `
+                <div style="position:relative;">
+                  <video width="100%" autoplay loop muted style="display:block;">
+                    <source src="${videoPath}" type="video/mp4">
+                  </video>
+                  <img src="${imagePath}" width="100%" style="position:absolute;top:0;left:0;opacity:0.3;">
+                </div>`;
+      } else {
+        previewHtml += `
+                <img src="${imagePath}" width="100%">`;
+      }
+      
+      previewHtml += `
               </td>
-              <td style="width:80%;vertical-align:middle">
-                <span class="papertitle">${title}</span>
+              <td style="width:80%;vertical-align:middle;padding-left:20px;">
+                <span class="papertitle" style="font-weight:bold;font-size:18px;">${title}</span>
                 <p>${description}</p>
               </td>
             </tr>
@@ -382,208 +805,282 @@
         </table>
       `;
       
-      document.getElementById('preview-content').innerHTML = previewHtml;
-      document.getElementById('preview-container').classList.remove('hidden');
-      document.getElementById('output-container').classList.add('hidden');
+      previewContent.innerHTML = previewHtml;
+      previewContainer.classList.remove('hidden');
+      outputContainer.classList.add('hidden');
+      
+      // Scroll to the preview
+      previewContainer.scrollIntoView({ behavior: 'smooth' });
     });
     
     // Copy to clipboard functionality
-    document.getElementById('copy-btn').addEventListener('click', function() {
-      const code = document.getElementById('output-code').textContent;
+    copyBtn.addEventListener('click', function() {
+      const code = outputCode.textContent;
+      
       navigator.clipboard.writeText(code).then(() => {
-        alert('HTML copied to clipboard!');
+        showToast('HTML copied to clipboard!');
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        
+        setTimeout(() => {
+          copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+        }, 2000);
+      }).catch(err => {
+        showToast('Failed to copy: ' + err, true);
       });
     });
     
     // Parse existing HTML functionality
     document.getElementById('parse-existing').addEventListener('click', function() {
       const existingHtml = document.getElementById('existing-html').value;
+      const parseSpinner = document.getElementById('parse-spinner');
+      const parseText = document.getElementById('parse-text');
+      const parseBtn = document.getElementById('parse-existing');
+      const existingHtmlError = document.getElementById('existing-html-error');
       
-      try {
-        // Create a temporary element to parse the HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = existingHtml;
-        
-        // Extract project details
-        const projectTitle = tempDiv.querySelector('.papertitle').textContent;
-        const imagePath = tempDiv.querySelector('img').getAttribute('src');
-        
-        // Get video path if it exists
-        let videoPath = '';
-        const videoElement = tempDiv.querySelector('video source');
-        if (videoElement) {
-          videoPath = videoElement.getAttribute('src');
-        }
-        
-        // Get authors
-        const tdElement = tempDiv.querySelector('td[style*="80%"]');
-        let authors = [];
-        let currentNode = tdElement.querySelector('.papertitle').parentNode.nextSibling;
-        
-        // Skip to the first <br>
-        while (currentNode && !(currentNode.nodeName === 'BR')) {
-          currentNode = currentNode.nextSibling;
-        }
-        
-        // Get the text between the first <br> and second <br>
-        if (currentNode) {
-          currentNode = currentNode.nextSibling; // Move past the <br>
-          let authorText = '';
+      if (!existingHtml.trim()) {
+        existingHtmlError.style.display = 'block';
+        showToast('Please paste HTML to parse', true);
+        return;
+      }
+      
+      // Show loading state
+      parseSpinner.classList.remove('hidden');
+      parseText.textContent = 'Parsing...';
+      parseBtn.disabled = true;
+      
+      setTimeout(() => {
+        try {
+          // Create a temporary element to parse the HTML
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = existingHtml;
           
+          // Check if this is valid project HTML
+          const papertitleEl = tempDiv.querySelector('.papertitle');
+          const imageEl = tempDiv.querySelector('img');
+          
+          if (!papertitleEl || !imageEl) {
+            throw new Error('Invalid project HTML. Cannot find required elements.');
+          }
+          
+          // Extract project details
+          const projectTitle = papertitleEl.textContent.trim();
+          const imagePath = imageEl.getAttribute('src');
+          
+          // Get video path if it exists
+          let videoPath = '';
+          const videoElement = tempDiv.querySelector('video source');
+          if (videoElement) {
+            videoPath = videoElement.getAttribute('src');
+          }
+          
+          // Get authors
+          const tdElement = tempDiv.querySelector('td[style*="80%"]');
+          let authors = [];
+          let currentNode = tdElement.querySelector('.papertitle').parentNode.nextSibling;
+          
+          // Skip to the first <br>
           while (currentNode && !(currentNode.nodeName === 'BR')) {
-            if (currentNode.nodeType === Node.TEXT_NODE) {
-              authorText += currentNode.textContent;
-            } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
-              if (currentNode.nodeName === 'A' || currentNode.nodeName === 'STRONG') {
+            currentNode = currentNode.nextSibling;
+          }
+          
+          // Get the text between the first <br> and second <br>
+          if (currentNode) {
+            currentNode = currentNode.nextSibling; // Move past the <br>
+            let authorText = '';
+            
+            while (currentNode && !(currentNode.nodeName === 'BR')) {
+              if (currentNode.nodeType === Node.TEXT_NODE) {
                 authorText += currentNode.textContent;
+              } else if (currentNode.nodeType === Node.ELEMENT_NODE) {
+                if (currentNode.nodeName === 'A' || currentNode.nodeName === 'STRONG') {
+                  authorText += currentNode.textContent;
+                }
               }
+              currentNode = currentNode.nextSibling;
             }
-            currentNode = currentNode.nextSibling;
+            
+            authors = authorText.split(',').map(a => a.trim());
           }
           
-          authors = authorText.split(',').map(a => a.trim());
-        }
-        
-        // Get publication and year
-        let publication = '';
-        let year = '';
-        if (currentNode) {
-          currentNode = currentNode.nextSibling; // Move past the second <br>
-          let pubText = '';
-          
-          while (currentNode && !(currentNode.nodeName === 'BR')) {
-            if (currentNode.nodeType === Node.TEXT_NODE) {
-              pubText += currentNode.textContent;
-            } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === 'EM') {
-              publication = currentNode.textContent;
+          // Get publication and year
+          let publication = '';
+          let year = '';
+          if (currentNode) {
+            currentNode = currentNode.nextSibling; // Move past the second <br>
+            let pubText = '';
+            
+            while (currentNode && !(currentNode.nodeName === 'BR')) {
+              if (currentNode.nodeType === Node.TEXT_NODE) {
+                pubText += currentNode.textContent;
+              } else if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode.nodeName === 'EM') {
+                publication = currentNode.textContent;
+              }
+              currentNode = currentNode.nextSibling;
             }
-            currentNode = currentNode.nextSibling;
+            
+            const pubMatch = pubText.match(/,\s*(\d{4})/);
+            if (pubMatch) {
+              year = pubMatch[1];
+            }
           }
           
-          const pubMatch = pubText.match(/,\s*(\d{4})/);
-          if (pubMatch) {
-            year = pubMatch[1];
+          // Get project page and paper URL
+          let projectPage = '';
+          let paperUrl = '';
+          
+          const links = tdElement.querySelectorAll('a');
+          links.forEach(link => {
+            const text = link.textContent.trim().toLowerCase();
+            const href = link.getAttribute('href');
+            
+            if (text === 'project page') {
+              projectPage = href;
+            } else if (text === 'arxiv') {
+              paperUrl = href;
+            }
+          });
+          
+          // Get description
+          let description = '';
+          const pElements = tdElement.querySelectorAll('p');
+          if (pElements.length > 1) {
+            description = pElements[pElements.length - 1].textContent.trim();
           }
-        }
-        
-        // Get project page and paper URL
-        let projectPage = '';
-        let paperUrl = '';
-        
-        const links = tdElement.querySelectorAll('a');
-        links.forEach(link => {
-          const text = link.textContent.trim().toLowerCase();
-          const href = link.getAttribute('href');
           
-          if (text === 'project page') {
-            projectPage = href;
-          } else if (text === 'arxiv') {
-            paperUrl = href;
-          }
-        });
-        
-        // Get description
-        let description = '';
-        const pElements = tdElement.querySelectorAll('p');
-        if (pElements.length > 1) {
-          description = pElements[pElements.length - 1].textContent.trim();
-        }
-        
-        // Create the edit form
-        const editFormHtml = `
-          <div class="form-group">
-            <label for="edit-project-title">Project Title:</label>
-            <input type="text" id="edit-project-title" value="${projectTitle}">
-          </div>
+          // Create the edit form
+          const editFormHtml = `
+            <h3>Edit Project</h3>
+            <form id="edit-project-form">
+              <div class="form-group">
+                <label for="edit-project-title">Project Title:<span style="color: #e74c3c">*</span></label>
+                <input type="text" id="edit-project-title" value="${projectTitle}" required>
+                <div id="edit-title-error" class="error">Project title is required</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-project-image">Project Image Path:<span style="color: #e74c3c">*</span></label>
+                <input type="text" id="edit-project-image" value="${imagePath}" required>
+                <div id="edit-image-error" class="error">Image path is required</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-project-video">Project Video Path:</label>
+                <input type="text" id="edit-project-video" value="${videoPath}">
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-authors">Authors (comma separated):<span style="color: #e74c3c">*</span></label>
+                <input type="text" id="edit-authors" value="${authors.join(', ')}" required>
+                <div id="edit-authors-error" class="error">At least one author is required</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-publication">Publication:<span style="color: #e74c3c">*</span></label>
+                <input type="text" id="edit-publication" value="${publication}" required>
+                <div id="edit-publication-error" class="error">Publication is required</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-pub-year">Year:<span style="color: #e74c3c">*</span></label>
+                <input type="text" id="edit-pub-year" value="${year}" required pattern="[0-9]{4}">
+                <div id="edit-year-error" class="error">Valid year is required (format: YYYY)</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-project-page">Project Page URL:</label>
+                <input type="url" id="edit-project-page" value="${projectPage}">
+                <div id="edit-project-page-error" class="error">Please enter a valid URL</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-paper-url">Paper URL:</label>
+                <input type="url" id="edit-paper-url" value="${paperUrl}">
+                <div id="edit-paper-url-error" class="error">Please enter a valid URL</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-project-description">Project Description:<span style="color: #e74c3c">*</span></label>
+                <textarea id="edit-project-description" rows="5" required>${description}</textarea>
+                <div id="edit-description-error" class="error">Description is required</div>
+              </div>
+              
+              <div class="button-group">
+                <button type="button" id="update-btn">
+                  <span id="update-spinner" class="spinner hidden"></span>
+                  <span id="update-text">Update HTML</span>
+                </button>
+                <button type="button" id="edit-preview-btn" class="secondary">
+                  <i class="fas fa-eye"></i> Preview
+                </button>
+              </div>
+            </form>
+            
+            <div id="edit-output-container" class="output-container hidden">
+              <h3>Updated HTML</h3>
+              <p>Copy this code to replace the original HTML in your index.html file.</p>
+              <button id="edit-copy-btn" class="copy-btn">
+                <i class="fas fa-copy"></i> Copy
+              </button>
+              <code id="edit-output-code"></code>
+            </div>
+            
+            <div id="edit-preview-container" class="preview hidden">
+              <h3>Preview</h3>
+              <div id="edit-preview-content"></div>
+            </div>
+          `;
           
-          <div class="form-group">
-            <label for="edit-project-image">Project Image Path:</label>
-            <input type="text" id="edit-project-image" value="${imagePath}">
-          </div>
+          document.getElementById('edit-form-container').innerHTML = editFormHtml;
+          document.getElementById('edit-form-container').classList.remove('hidden');
           
-          <div class="form-group">
-            <label for="edit-project-video">Project Video Path:</label>
-            <input type="text" id="edit-project-video" value="${videoPath}">
-          </div>
+          // Setup validation for edit form
+          setupEditFormValidation();
           
-          <div class="form-group">
-            <label for="edit-authors">Authors (comma separated):</label>
-            <input type="text" id="edit-authors" value="${authors.join(', ')}">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-publication">Publication:</label>
-            <input type="text" id="edit-publication" value="${publication}">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-pub-year">Year:</label>
-            <input type="text" id="edit-pub-year" value="${year}">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-project-page">Project Page URL:</label>
-            <input type="text" id="edit-project-page" value="${projectPage}">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-paper-url">Paper URL:</label>
-            <input type="text" id="edit-paper-url" value="${paperUrl}">
-          </div>
-          
-          <div class="form-group">
-            <label for="edit-project-description">Project Description:</label>
-            <textarea id="edit-project-description" rows="5">${description}</textarea>
-          </div>
-          
-          <button id="update-btn">Update HTML</button>
-          <button id="edit-preview-btn">Preview</button>
-          
-          <div id="edit-output-container" class="output-container hidden">
-            <h3>Updated HTML (Copy this to your index.html):</h3>
-            <code id="edit-output-code"></code>
-            <button id="edit-copy-btn">Copy to Clipboard</button>
-          </div>
-          
-          <div id="edit-preview-container" class="preview hidden">
-            <h3>Preview:</h3>
-            <div id="edit-preview-content"></div>
-          </div>
-        `;
-        
-        document.getElementById('edit-form-container').innerHTML = editFormHtml;
-        document.getElementById('edit-form-container').classList.remove('hidden');
-        
-        // Add event listeners for the edit form
-        document.getElementById('update-btn').addEventListener('click', function() {
-          const title = document.getElementById('edit-project-title').value;
-          const imagePath = document.getElementById('edit-project-image').value;
-          const videoPath = document.getElementById('edit-project-video').value;
-          const authors = document.getElementById('edit-authors').value.split(',').map(author => author.trim());
-          const publication = document.getElementById('edit-publication').value;
-          const year = document.getElementById('edit-pub-year').value;
-          const projectPage = document.getElementById('edit-project-page').value;
-          const paperUrl = document.getElementById('edit-paper-url').value;
-          const description = document.getElementById('edit-project-description').value;
-          
-          // Generate a unique ID for the project based on the title
-          const projectId = title.toLowerCase().replace(/\s+/g, '_');
-          
-          // Generate HTML (same as the new project HTML generation)
-          let html = `
+          // Add event listeners for the edit form
+          document.getElementById('update-btn').addEventListener('click', function() {
+            if (!validateEditForm()) {
+              showToast('Please fix the errors in the form', true);
+              return;
+            }
+            
+            const updateSpinner = document.getElementById('update-spinner');
+            const updateText = document.getElementById('update-text');
+            const updateBtn = document.getElementById('update-btn');
+            
+            // Show loading state
+            updateSpinner.classList.remove('hidden');
+            updateText.textContent = 'Updating...';
+            updateBtn.disabled = true;
+            
+            setTimeout(() => {
+              const title = document.getElementById('edit-project-title').value.trim();
+              const imagePath = document.getElementById('edit-project-image').value.trim();
+              const videoPath = document.getElementById('edit-project-video').value.trim();
+              const authors = document.getElementById('edit-authors').value.split(',').map(author => author.trim());
+              const publication = document.getElementById('edit-publication').value.trim();
+              const year = document.getElementById('edit-pub-year').value.trim();
+              const projectPage = document.getElementById('edit-project-page').value.trim();
+              const paperUrl = document.getElementById('edit-paper-url').value.trim();
+              const description = document.getElementById('edit-project-description').value.trim();
+              
+              // Generate a unique ID for the project based on the title
+              const projectId = title.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+              
+              // Generate HTML (same as the new project HTML generation)
+              let html = `
     <tr onmouseout="${projectId}_stop()" onmouseover="${projectId}_start()">
       <td style="padding:16px;width:20%;vertical-align:middle">
         <div class="one">
           <div class="two" id='${projectId}_image'>`;
-          
-          if (videoPath) {
-            html += `<video width=100% muted autoplay loop>
+              
+              if (videoPath) {
+                html += `<video width=100% muted autoplay loop>
           <source src="${videoPath}" type="video/mp4">
           Your browser does not support the video tag.
           </video>`;
-          }
-          
-          html += `</div>
+              }
+              
+              html += `</div>
           <img src='${imagePath}' width=100%>
         </div>
         <script type="text/javascript">
@@ -598,109 +1095,256 @@
         </script>
       </td>
       <td style="padding:8px;width:80%;vertical-align:middle">`;
-          
-          if (projectPage) {
-            html += `
+              
+              if (projectPage) {
+                html += `
         <a href="${projectPage}">
           <span class="papertitle">${title}</span>
         </a>`;
-          } else {
-            html += `
+              } else {
+                html += `
         <span class="papertitle">${title}</span>`;
-          }
-          
-          html += `
+              }
+              
+              html += `
         <br>`;
-          
-          // Add authors
-          for (let i = 0; i < authors.length; i++) {
-            const author = authors[i].trim();
-            
-            if (author.toLowerCase().includes("jonathan") || author.toLowerCase().includes("barron")) {
-              html += `
+              
+              // Add authors
+              for (let i = 0; i < authors.length; i++) {
+                const author = authors[i].trim();
+                
+                if (author.toLowerCase().includes("jonathan") || author.toLowerCase().includes("barron")) {
+                  html += `
         <strong>${author}</strong>`;
-            } else {
-              html += `
+                } else {
+                  html += `
         <a href="#">${author}</a>`;
-            }
-            
-            if (i < authors.length - 1) {
-              html += `,`;
-            }
-          }
-          
-          html += `
+                }
+                
+                if (i < authors.length - 1) {
+                  html += `,`;
+                }
+              }
+              
+              html += `
         <br>
         <em>${publication}</em>, ${year}
         <br>`;
-          
-          // Add links
-          if (projectPage) {
-            html += `
+              
+              // Add links
+              if (projectPage) {
+                html += `
         <a href="${projectPage}">project page</a>`;
-            
-            if (paperUrl) {
-              html += `
+                
+                if (paperUrl) {
+                  html += `
         /`;
-            }
-          }
-          
-          if (paperUrl) {
-            html += `
+                }
+              }
+              
+              if (paperUrl) {
+                html += `
         <a href="${paperUrl}">arXiv</a>`;
-          }
-          
-          html += `
+              }
+              
+              html += `
         <p></p>
         <p>
         ${description}
         </p>
       </td>
     </tr>`;
-          
-          // Display output
-          document.getElementById('edit-output-code').textContent = html;
-          document.getElementById('edit-output-container').classList.remove('hidden');
-          document.getElementById('edit-preview-container').classList.add('hidden');
-        });
-        
-        document.getElementById('edit-preview-btn').addEventListener('click', function() {
-          const title = document.getElementById('edit-project-title').value;
-          const imagePath = document.getElementById('edit-project-image').value;
-          const description = document.getElementById('edit-project-description').value;
-          
-          let previewHtml = `
-            <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
-              <tbody>
-                <tr>
-                  <td style="width:20%;vertical-align:middle">
-                    <img src="${imagePath}" width="100%">
-                  </td>
-                  <td style="width:80%;vertical-align:middle">
-                    <span class="papertitle">${title}</span>
-                    <p>${description}</p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          `;
-          
-          document.getElementById('edit-preview-content').innerHTML = previewHtml;
-          document.getElementById('edit-preview-container').classList.remove('hidden');
-          document.getElementById('edit-output-container').classList.add('hidden');
-        });
-        
-        document.getElementById('edit-copy-btn').addEventListener('click', function() {
-          const code = document.getElementById('edit-output-code').textContent;
-          navigator.clipboard.writeText(code).then(() => {
-            alert('HTML copied to clipboard!');
+              
+              // Display output
+              document.getElementById('edit-output-code').textContent = html;
+              document.getElementById('edit-output-container').classList.remove('hidden');
+              document.getElementById('edit-preview-container').classList.add('hidden');
+              
+              // Reset button state
+              updateSpinner.classList.add('hidden');
+              updateText.textContent = 'Update HTML';
+              updateBtn.disabled = false;
+              
+              // Scroll to the output
+              document.getElementById('edit-output-container').scrollIntoView({ behavior: 'smooth' });
+              
+              showToast('HTML updated successfully');
+            }, 800);
           });
-        });
-      } catch (error) {
-        alert('Error parsing HTML. Please check your input and try again.');
-        console.error(error);
-      }
+          
+          document.getElementById('edit-preview-btn').addEventListener('click', function() {
+            if (!validateEditForm()) {
+              showToast('Please fix the errors in the form', true);
+              return;
+            }
+            
+            const title = document.getElementById('edit-project-title').value.trim();
+            const imagePath = document.getElementById('edit-project-image').value.trim();
+            const videoPath = document.getElementById('edit-project-video').value.trim();
+            const description = document.getElementById('edit-project-description').value.trim();
+            
+            let previewHtml = `
+              <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;">
+                <tbody>
+                  <tr>
+                    <td style="width:20%;vertical-align:middle">`;
+                    
+            if (videoPath) {
+              previewHtml += `
+                      <div style="position:relative;">
+                        <video width="100%" autoplay loop muted style="display:block;">
+                          <source src="${videoPath}" type="video/mp4">
+                        </video>
+                        <img src="${imagePath}" width="100%" style="position:absolute;top:0;left:0;opacity:0.3;">
+                      </div>`;
+            } else {
+              previewHtml += `
+                      <img src="${imagePath}" width="100%">`;
+            }
+            
+            previewHtml += `
+                    </td>
+                    <td style="width:80%;vertical-align:middle;padding-left:20px;">
+                      <span class="papertitle" style="font-weight:bold;font-size:18px;">${title}</span>
+                      <p>${description}</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            `;
+            
+            document.getElementById('edit-preview-content').innerHTML = previewHtml;
+            document.getElementById('edit-preview-container').classList.remove('hidden');
+            document.getElementById('edit-output-container').classList.add('hidden');
+            
+            // Scroll to the preview
+            document.getElementById('edit-preview-container').scrollIntoView({ behavior: 'smooth' });
+          });
+          
+          document.getElementById('edit-copy-btn').addEventListener('click', function() {
+            const code = document.getElementById('edit-output-code').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+              showToast('HTML copied to clipboard!');
+              this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+              
+              setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-copy"></i> Copy';
+              }, 2000);
+            }).catch(err => {
+              showToast('Failed to copy: ' + err, true);
+            });
+          });
+          
+          // Scroll to the edit form
+          document.getElementById('edit-form-container').scrollIntoView({ behavior: 'smooth' });
+          
+        } catch (error) {
+          existingHtmlError.style.display = 'block';
+          showToast('Error parsing HTML: ' + error.message, true);
+          console.error(error);
+        }
+        
+        // Reset button state
+        parseSpinner.classList.add('hidden');
+        parseText.textContent = 'Parse HTML';
+        parseBtn.disabled = false;
+      }, 1000);
     });
+    
+    // Setup validation for edit form
+    function setupEditFormValidation() {
+      const requiredFields = [
+        { field: document.getElementById('edit-project-title'), error: document.getElementById('edit-title-error') },
+        { field: document.getElementById('edit-project-image'), error: document.getElementById('edit-image-error') },
+        { field: document.getElementById('edit-authors'), error: document.getElementById('edit-authors-error') },
+        { field: document.getElementById('edit-publication'), error: document.getElementById('edit-publication-error') },
+        { field: document.getElementById('edit-pub-year'), error: document.getElementById('edit-year-error') },
+        { field: document.getElementById('edit-project-description'), error: document.getElementById('edit-description-error') }
+      ];
+      
+      requiredFields.forEach(({ field, error }) => {
+        if (field) {
+          field.addEventListener('input', function() {
+            if (field.validity.valid) {
+              error.style.display = 'none';
+            } else {
+              error.style.display = 'block';
+            }
+          });
+        }
+      });
+      
+      // URL validation
+      const editUrlFields = [
+        document.getElementById('edit-project-page'),
+        document.getElementById('edit-paper-url')
+      ];
+      
+      editUrlFields.forEach(field => {
+        if (field) {
+          field.addEventListener('input', function() {
+            const error = document.getElementById(`edit-${field.id.substring(5)}-error`);
+            if (field.value === '' || field.validity.valid) {
+              error.style.display = 'none';
+            } else {
+              error.style.display = 'block';
+            }
+          });
+        }
+      });
+    }
+    
+    // Validate edit form
+    function validateEditForm() {
+      let isValid = true;
+      
+      // Check required fields
+      const requiredFields = [
+        { field: document.getElementById('edit-project-title'), error: document.getElementById('edit-title-error') },
+        { field: document.getElementById('edit-project-image'), error: document.getElementById('edit-image-error') },
+        { field: document.getElementById('edit-authors'), error: document.getElementById('edit-authors-error') },
+        { field: document.getElementById('edit-publication'), error: document.getElementById('edit-publication-error') },
+        { field: document.getElementById('edit-pub-year'), error: document.getElementById('edit-year-error') },
+        { field: document.getElementById('edit-project-description'), error: document.getElementById('edit-description-error') }
+      ];
+      
+      requiredFields.forEach(({ field, error }) => {
+        if (field && !field.value.trim()) {
+          error.style.display = 'block';
+          isValid = false;
+        } else if (field) {
+          error.style.display = 'none';
+        }
+      });
+      
+      // Validate year format
+      const editYear = document.getElementById('edit-pub-year');
+      if (editYear && editYear.value && !/^\d{4}$/.test(editYear.value)) {
+        document.getElementById('edit-year-error').style.display = 'block';
+        isValid = false;
+      }
+      
+      // Validate URLs (only if not empty)
+      const editUrlFields = [
+        document.getElementById('edit-project-page'),
+        document.getElementById('edit-paper-url')
+      ];
+      
+      editUrlFields.forEach(field => {
+        if (field) {
+          const error = document.getElementById(`edit-${field.id.substring(5)}-error`);
+          if (field.value && !field.validity.valid) {
+            error.style.display = 'block';
+            isValid = false;
+          } else {
+            error.style.display = 'none';
+          }
+        }
+      });
+      
+      return isValid;
+    }
   </script>
 </body>
 </html>
